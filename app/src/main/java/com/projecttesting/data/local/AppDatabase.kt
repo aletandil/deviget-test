@@ -4,13 +4,13 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.projecttesting.data.daos.RidersDao
-import com.projecttesting.data.models.Rider
+import com.projecttesting.data.daos.EntriesDao
+import com.projecttesting.data.models.Entry
 
-@Database(entities = [Rider::class], version = 1, exportSchema = false)
+@Database(entities = [Entry::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun ridersDao(): RidersDao
+    abstract fun ridersDao(): EntriesDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null

@@ -2,7 +2,7 @@ package com.projecttesting.di
 
 import com.jakewharton.retrofit2.adapter.kotlin.coroutines.CoroutineCallAdapterFactory
 import com.projecttesting.BASE_URL
-import com.projecttesting.data.services.RidersService
+import com.projecttesting.data.services.EntriesService
 import com.projecttesting.network.ApiClient
 import dagger.Module
 import dagger.Provides
@@ -73,7 +73,7 @@ object NetworkModule {
     @Provides
     @Reusable
     @JvmStatic
-    internal fun provideRiderService(apiClient: ApiClient): RidersService {
-        return apiClient.createService(RidersService::class.java)
+    internal fun provideRiderService(apiClient: ApiClient): EntriesService {
+        return apiClient.createService(EntriesService::class.java)
     }
 }

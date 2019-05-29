@@ -3,9 +3,9 @@ package com.projecttesting.ui.main
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.projecttesting.domain.LoadRiderUseCase
-import com.projecttesting.domain.LoadRiderUseCaseParams
-import com.projecttesting.domain.LoadRiderUseCaseResult
+import com.projecttesting.domain.LoadTopEntriesUseCase
+import com.projecttesting.domain.LoadTopEntriesUseCaseParams
+import com.projecttesting.domain.LoadTopEntriesUseCaseResult
 import com.projecttesting.ui.base.ScopedViewModel
 import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
@@ -16,20 +16,20 @@ import javax.inject.Inject
  * [@Provides] is required
  */
 class MainViewModel @Inject constructor(
-    private val loadRiderUseCase: LoadRiderUseCase
+    private val loadTopEntriesUseCase: LoadTopEntriesUseCase
 
 ) : ScopedViewModel() {
 
-    private var _rider: MediatorLiveData<LoadRiderUseCaseResult> = loadRiderUseCase.observe()
-    val rider: LiveData<LoadRiderUseCaseResult>
-        get() = _rider
+    private var _topEntries: MediatorLiveData<LoadTopEntriesUseCaseResult> = loadTopEntriesUseCase.observe()
+    val topEntries: LiveData<LoadTopEntriesUseCaseResult>
+        get() = _topEntries
 
     val name: ObservableField<String> = ObservableField()
 
     init {
 
-        loadRiderUseCase.execute(
-            LoadRiderUseCaseParams.Get(
+        loadTopEntriesUseCase.execute(
+            LoadTopEntriesUseCaseParams.Get(
                 coroutineScope,
                 Dispatchers.IO
             )

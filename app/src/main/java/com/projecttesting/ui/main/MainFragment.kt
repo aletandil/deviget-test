@@ -9,9 +9,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.projecttesting.R
-import com.projecttesting.data.models.Rider
 import com.projecttesting.databinding.FragmentMainBinding
-import com.projecttesting.domain.LoadRiderUseCaseResult
+import com.projecttesting.domain.LoadTopEntriesUseCaseResult
 import com.projecttesting.ui.base.BaseDaggerFragment
 import javax.inject.Inject
 
@@ -40,18 +39,18 @@ class MainFragment : BaseDaggerFragment() {
             viewModel = this@MainFragment.mainViewModel  // equivalent to java setViewModel()
         }
 
-        mainViewModel.rider.observe(this, Observer<LoadRiderUseCaseResult> { riderResult ->
-            when (riderResult) {
-                is LoadRiderUseCaseResult.LoadRiderSuccessful -> binding.viewModel?.name?.set(riderResult.rider.firstName)
-                is LoadRiderUseCaseResult.LoadRiderError -> showErrorLoadingRider()
+        mainViewModel.topEntries.observe(this, Observer<LoadTopEntriesUseCaseResult> { topEntriesResult ->
+            when (topEntriesResult) {
+                is LoadTopEntriesUseCaseResult.LoadTopEntriesSuccessful -> binding.viewModel?.name?.set("asd")
+                is LoadTopEntriesUseCaseResult.LoadTopEntriesError -> showErrorLoadingTopEntries()
             }
         })
 
         return binding.root
     }
 
-    private fun showErrorLoadingRider() {
-        Toast.makeText(context, R.string.error_loading_rider, Toast.LENGTH_SHORT).show()
+    private fun showErrorLoadingTopEntries() {
+        Toast.makeText(context, R.string.error_loading_top_entries, Toast.LENGTH_SHORT).show()
     }
 
 }

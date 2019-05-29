@@ -4,9 +4,9 @@ import android.content.Context
 import android.content.SharedPreferences
 import com.projecttesting.App
 import com.projecttesting.data.local.AppDatabase
-import com.projecttesting.data.repositories.RidersRepository
-import com.projecttesting.data.services.RidersService
-import com.projecttesting.domain.LoadRiderUseCase
+import com.projecttesting.data.repositories.EntryRepository
+import com.projecttesting.data.services.EntriesService
+import com.projecttesting.domain.LoadTopEntriesUseCase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -33,10 +33,10 @@ open class AppModule {
     @Singleton
     @Provides
     open fun provideRidersRepository(
-        remoteRidersSource: RidersService,
+        remoteRidersSource: EntriesService,
         appDatabase: AppDatabase
-    ): RidersRepository =
-        RidersRepository(remoteRidersSource, appDatabase.ridersDao())
+    ): EntryRepository =
+        EntryRepository(remoteRidersSource, appDatabase.ridersDao())
 
     @Singleton
     @Provides
@@ -45,6 +45,6 @@ open class AppModule {
     @Singleton
     @Provides
     fun providesLoadRiderUseCase(
-        ridersRepository: RidersRepository
-    ): LoadRiderUseCase = LoadRiderUseCase(ridersRepository)
+        ridersRepository: EntryRepository
+    ): LoadTopEntriesUseCase = LoadTopEntriesUseCase(ridersRepository)
 }

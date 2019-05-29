@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name">Deviget</string>
+    <string name="action_settings">Settings</string>
+
+    <string name="error_loading_rider">Error loading rider</string>
+
+    <string name="main_welcome_text">Hi, %s</string>
+
+</resources>

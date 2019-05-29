@@ -1,0 +1,178 @@
+import org.gradle.internal.logging.text.StyledTextOutputFactory
+import static org.gradle.internal.logging.text.StyledTextOutput.Style
+
+apply plugin: 'com.android.application'
+
+apply plugin: 'kotlin-android-extensions'
+apply plugin: 'kotlin-android'
+apply plugin: 'kotlin-kapt'
+apply plugin: 'androidx.navigation.safeargs'
+
+apply plugin: "jacoco"
+android {
+    compileSdkVersion 28
+    defaultConfig {
+        applicationId "com.projecttesting"
+        minSdkVersion 16
+        targetSdkVersion 28
+        versionCode 1
+        versionName "1.0"
+        vectorDrawables.useSupportLibrary true
+        multiDexEnabled true
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    productFlavors {
+        develop {
+            buildConfigField "boolean", "DEVELOP", "true"
+            buildConfigField "boolean", "PRODUCTION", "false"
+            dimension "environment"
+        }
+        production {
+            buildConfigField "boolean", "DEVELOP", "false"
+            buildConfigField "boolean", "PRODUCTION", "true"
+            dimension "environment"
+        }
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    dataBinding {
+        enabled = true
+    }
+
+    flavorDimensions "environment"
+
+    // Parcelable implementation generator (@Parcelize) still in experimental stage
+    // https://kotlinlang.org/docs/tutorials/android-plugin.html#enabling-parcelable-support
+    // Enables view caching in viewholders - https://github.com/Kotlin/KEEP/blob/master/proposals/android-extensions-entity-caching.md
+    androidExtensions {
+        experimental = true
+    }
+
+    lintOptions {
+        abortOnError false
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: 'libs', include: ['*.jar'])
+
+    // kotlin:
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk8:$rootProject.kotlinVersion"
+    implementation "org.jetbrains.anko:anko:$rootProject.ankoVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-core:$rootProject.coroutinesVersion"
+    implementation "org.jetbrains.kotlinx:kotlinx-coroutines-android:$rootProject.coroutinesVersion"
+
+    // support
+    implementation 'androidx.multidex:multidex:2.0.1'
+    implementation "androidx.core:core-ktx:$rootProject.ktxVersion"
+    implementation "androidx.cardview:cardview:1.0.0"
+    implementation "androidx.recyclerview:recyclerview:$rootProject.recyclerViewVersion"
+    implementation "androidx.legacy:legacy-support-v4:$rootProject.legacySupportVersion"
+    implementation "androidx.constraintlayout:constraintlayout:$rootProject.constraintLayoutVersion"
+
+    // Architecture Components
+    implementation "androidx.room:room-runtime:$rootProject.roomVersion"
+    implementation 'androidx.appcompat:appcompat:1.1.0-alpha05'
+    kapt "androidx.room:room-compiler:$rootProject.roomVersion"
+    implementation "androidx.lifecycle:lifecycle-extensions:$rootProject.lifecycleVersion"
+    kapt "androidx.lifecycle:lifecycle-compiler:$rootProject.lifecycleVersion"
+
+    // Image
+    kapt "com.github.bumptech.glide:compiler:$rootProject.glideVersion"
+    implementation "com.github.bumptech.glide:glide:$rootProject.glideVersion"
+
+    // Dagger
+    kapt "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    kapt "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-android-processor:$rootProject.daggerVersion"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android:$rootProject.daggerVersion"
+    implementation "com.google.dagger:dagger-android-support:$rootProject.daggerVersion"
+    testAnnotationProcessor "com.google.dagger:dagger-compiler:$rootProject.daggerVersion"
+
+    // Navigation
+    implementation "android.arch.navigation:navigation-fragment-ktx:$rootProject.navigationVersion"
+    implementation "android.arch.navigation:navigation-ui-ktx:$rootProject.navigationVersion"
+
+    // Network
+    implementation "com.squareup.retrofit2:retrofit:$rootProject.retrofitVersion"
+    implementation "com.squareup.retrofit2:converter-moshi:$rootProject.retrofitVersion" // replaces Gson
+    implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:$rootProject.retrofitKotlinCoroutinesAdapterVersion"
+    implementation "com.squareup.okhttp3:okhttp:$rootProject.okhttpVersion"
+    implementation "com.squareup.okhttp3:logging-interceptor:$rootProject.okhttpVersion"
+    implementation "com.squareup.moshi:moshi-kotlin:$rootProject.moshiKotlinVersion"
+    kapt "com.squareup.moshi:moshi-kotlin-codegen:$rootProject.moshiKotlinVersion"
+
+    // RecyclerView - https://github.com/lisawray/groupie
+    // no reason to use databinding here
+    // uses ViewHolder caching from android extensions
+    implementation "com.xwray:groupie:$rootProject.groupieVersion"
+    implementation "com.xwray:groupie-kotlin-android-extensions:$rootProject.groupieVersion"
+
+    // Firebase - sdk version numbers may not match
+    implementation "com.google.firebase:firebase-core:16.0.9"
+    implementation "com.google.firebase:firebase-auth:17.0.0"
+
+    implementation "com.google.code.findbugs:jsr305:$rootProject.googleFindBugsVersion"
+
+    // Logging
+    implementation "com.jakewharton.timber:timber:$rootProject.timberVersion"
+
+    /**  Begin Android Test Dependencies */
+
+    // Core library
+    androidTestImplementation "androidx.test:core:$rootProject.androidxTestCoreVersion"
+    testImplementation "androidx.arch.core:core-testing:$rootProject.lifecycleVersion"
+
+    // AndroidJUnitRunner and JUnit Rules
+    androidTestImplementation "androidx.test:runner:$rootProject.runnerVersion"
+    androidTestUtil "androidx.test:orchestrator:$rootProject.runnerVersion"
+    androidTestImplementation "androidx.test:rules:$rootProject.rulesVersion"
+
+    // Assertions
+    androidTestImplementation "androidx.test.ext:junit:$rootProject.androidxJUnitVersion"
+    androidTestImplementation "androidx.test.ext:truth:$rootProject.androidxTruthVersion"
+    androidTestImplementation "com.google.truth:truth:$rootProject.googleTruthVersion"
+    // Espresso dependencies
+    androidTestImplementation "androidx.test.espresso:espresso-core:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-intents:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-accessibility:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso:espresso-web:$rootProject.espressoVersion"
+    androidTestImplementation "androidx.test.espresso.idling:idling-concurrent:$rootProject.espressoVersion"
+
+    // The following Espresso dependency can be either "implementation"
+    // or "androidTestImplementation", depending on whether you want the
+    // dependency to appear on your APK's compile classpath or the test APK
+    // classpath.
+    androidTestImplementation "androidx.test.espresso:espresso-idling-resource:$rootProject.espressoVersion"
+
+    // Mockito does not yet have first class support for Kotlin, but mostly works except for argument captors
+    // https://github.com/mockito/mockito/wiki/Mockito-for-Kotlin
+    // Also tried Mockito-Kotlin 2.1.0 but that did not work either
+    // see - https://github.com/mockito/mockito/wiki/What%27s-new-in-Mockito-2#mock-the-unmockable-opt-in-mocking-of-final-classesmethods
+    // and - https://github.com/nhaarman/mockito-kotlin/wiki/Parameter-specified-as-non-null-is-null
+    // Solution: use inline instead of core - https://stackoverflow.com/a/42769060
+    //    testImplementation "org.mockito:mockito-core:$rootProject.mockitoVersion"
+    testImplementation "org.mockito:mockito-inline:$rootProject.mockitoVersion"
+    testImplementation "com.google.truth:truth:$rootProject.googleTruthVersion"
+    testImplementation "com.squareup.okhttp3:mockwebserver:$rootProject.okhttpVersion"
+    androidTestImplementation "androidx.room:room-testing:$rootProject.roomVersion"
+    androidTestImplementation "android.arch.navigation:navigation-testing-ktx:1.0.0-alpha06"  // version is not up to date with library
+
+    testImplementation 'junit:junit:4.12'
+    androidTestImplementation 'androidx.test:runner:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.1.1'
+}

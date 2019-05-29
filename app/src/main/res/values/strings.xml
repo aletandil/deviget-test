@@ -6,4 +6,7 @@
 
     <string name="main_welcome_text">Hi, %s</string>
 
+    <string name="entry_comments">%s comments</string>
+    <string name="dismiss_entry">Dismiss Post</string>
+
 </resources>

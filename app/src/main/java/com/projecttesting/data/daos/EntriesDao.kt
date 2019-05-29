@@ -21,14 +21,14 @@ interface EntriesDao {
      * @return the topEntries with entryID.
      */
     @Query("SELECT * FROM Entry WHERE id = :entryID")
-    fun getRiderById(entryID: String): Entry?
+    fun getEntryById(entryID: String): Entry?
 
     /**
      * Insert a topEntries in the database. If the topEntries already exists, ignore insert
      *
      * @param entry the topEntries to be inserted.
      */
-    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    @Insert(onConflict = OnConflictStrategy.ABORT)
     fun insertEntry(entry: Entry)
 
     /**
@@ -38,7 +38,7 @@ interface EntriesDao {
      * @return the number of riders updated. This should always be 1.
      */
     @Update
-    fun updateRider(rider: Entry): Int
+    fun updateEntry(rider: Entry): Int
 
     /**
      * Delete a topEntries by id.

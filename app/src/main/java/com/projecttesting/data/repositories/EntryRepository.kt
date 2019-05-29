@@ -27,14 +27,25 @@ class EntryRepository @Inject constructor(
     private val entriesDao: EntriesDao
 ) : EntriesSource {
 
+    override suspend fun getEntryByID(entryID: String): Entry? {
+
+        return loadEntryByIDFromLocalDataSource(entryID)
+    }
+
     override suspend fun getTopEntries(): TopEntriesResponse? {
 
         return loadTopEntriesFromRemoteDataSource()
 
     }
 
-    private fun loadRiderFromLocalDataSource(riderId: Int): Entry? {
-        return entriesDao.getRiderById(riderId)
+    override suspend fun updateEntry(entry: Entry) {
+
+        entriesDao.updateEntry(entry)
+
+    }
+
+    private fun loadEntryByIDFromLocalDataSource(entryID: String): Entry? {
+        return entriesDao.getEntryById(entryID)
     }
 
     private suspend fun loadTopEntriesFromRemoteDataSource(): TopEntriesResponse? {
@@ -50,7 +61,9 @@ class EntryRepository @Inject constructor(
             override fun onSuccess(data: TopEntriesResponse?) {
                 data?.let {
                     rider = data
-                    //entriesDao.insertEntry(data)
+                    data.data?.children?.forEach({
+                        entriesDao.insertEntry(it.data!!)
+                    })
                 }
             }
 
@@ -62,24 +75,4 @@ class EntryRepository @Inject constructor(
         return rider
 
     }
-
-    suspend fun updateRider(rider: Entry) {
-        /*NetworkHandler.request(entriesService.updateRider(topEntries.id!!, topEntries), object : RequestCallback<Entry> {
-
-            override fun onError(message: String?) {
-                // TODO: handle error state
-            }
-
-            override fun onSuccess(data: Entry?) {
-                data?.let {
-                    entriesDao.updateRider(data)
-                }
-            }
-
-            override fun onLoading() {
-                // TODO: handle loading state
-            }
-        })*/
-    }
-
 }

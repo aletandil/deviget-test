@@ -3,4 +3,16 @@
     <color name="colorPrimary">#008577</color>
     <color name="colorPrimaryDark">#00574B</color>
     <color name="colorAccent">#D81B60</color>
+
+    <color name="entry_default_color">#000000</color>
+
+    <color name="entry_list_author_color">#D8D7D8</color>
+    <color name="entry_list_time_color">#828182</color>
+    <color name="entry_list_title_color">#FFFFFF</color>
+    <color name="entry_list_comments_color">#966336</color>
+    <color name="entry_list_divider_color">#FFFFFF</color>
+
+    <color name="list_entries_background_color">#000000</color>
+    <color name="entry_not_readed_status">#197EFB</color>
+
 </resources>

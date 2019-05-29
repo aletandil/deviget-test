@@ -7,6 +7,7 @@ import com.projecttesting.data.local.AppDatabase
 import com.projecttesting.data.repositories.EntryRepository
 import com.projecttesting.data.services.EntriesService
 import com.projecttesting.domain.LoadTopEntriesUseCase
+import com.projecttesting.domain.MarkReadedEntryUseCase
 import dagger.Module
 import dagger.Provides
 import javax.inject.Singleton
@@ -47,4 +48,10 @@ open class AppModule {
     fun providesLoadRiderUseCase(
         ridersRepository: EntryRepository
     ): LoadTopEntriesUseCase = LoadTopEntriesUseCase(ridersRepository)
+
+    @Singleton
+    @Provides
+    fun providesMarkEntryReadedUseCase(
+        ridersRepository: EntryRepository
+    ): MarkReadedEntryUseCase = MarkReadedEntryUseCase(ridersRepository)
 }

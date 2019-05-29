@@ -1,13 +1,16 @@
 package com.projecttesting.ui.main
 
+import android.os.Parcelable
 import androidx.databinding.ObservableField
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.projecttesting.domain.LoadTopEntriesUseCase
-import com.projecttesting.domain.LoadTopEntriesUseCaseParams
-import com.projecttesting.domain.LoadTopEntriesUseCaseResult
+import com.projecttesting.data.models.TopEntriesDataChildrenResponse
+import com.projecttesting.data.repositories.EntryRepository
+import com.projecttesting.domain.*
 import com.projecttesting.ui.base.ScopedViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import javax.inject.Inject
 
 
@@ -16,15 +19,16 @@ import javax.inject.Inject
  * [@Provides] is required
  */
 class MainViewModel @Inject constructor(
-    private val loadTopEntriesUseCase: LoadTopEntriesUseCase
+    private val loadTopEntriesUseCase: LoadTopEntriesUseCase,
+    private val markReadedEntryUseCase: MarkReadedEntryUseCase,
+    val entryRepository: EntryRepository
+    ) : ScopedViewModel() {
 
-) : ScopedViewModel() {
+    var entriesScrollState: Parcelable? = null
 
     private var _topEntries: MediatorLiveData<LoadTopEntriesUseCaseResult> = loadTopEntriesUseCase.observe()
     val topEntries: LiveData<LoadTopEntriesUseCaseResult>
         get() = _topEntries
-
-    val name: ObservableField<String> = ObservableField()
 
     init {
 
@@ -34,5 +38,19 @@ class MainViewModel @Inject constructor(
                 Dispatchers.IO
             )
         )
+    }
+
+    fun markReadedEntry(entry: TopEntriesDataChildrenResponse) {
+        markReadedEntryUseCase.execute(
+            MarkReadedEntryUseCaseParams.Mark(
+                coroutineScope,
+                Dispatchers.IO,
+                entry.data!!
+            )
+        )
+    }
+
+    fun loadMoreEntries() {
+
     }
 }

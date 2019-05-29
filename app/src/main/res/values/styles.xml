@@ -1,7 +1,7 @@
 <resources>
 
     <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.DarkActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
@@ -16,5 +16,25 @@
     <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
 
     <style name="AppTheme.PopupOverlay" parent="ThemeOverlay.AppCompat.Light" />
+
+    <style name="entry_list_author">
+        <item name="android:textSize">22sp</item>
+        <item name="android:textColor">@color/entry_list_author_color</item>
+    </style>
+
+    <style name="entry_list_time">
+        <item name="android:textSize">17sp</item>
+        <item name="android:textColor">@color/entry_list_time_color</item>
+    </style>
+
+    <style name="entry_list_title">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/entry_list_title_color</item>
+    </style>
+
+    <style name="entry_list_comments">
+        <item name="android:textSize">21sp</item>
+        <item name="android:textColor">@color/entry_list_comments_color</item>
+    </style>
 
 </resources>

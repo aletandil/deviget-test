@@ -41,7 +41,8 @@ class MainViewModel @Inject constructor(
         loadTopEntriesUseCase.execute(
             LoadTopEntriesUseCaseParams.Get(
                 coroutineScope,
-                Dispatchers.IO
+                Dispatchers.IO,
+                false
             )
         )
     }
@@ -60,7 +61,8 @@ class MainViewModel @Inject constructor(
         loadTopEntriesUseCase.execute(
             LoadTopEntriesUseCaseParams.Get(
                 coroutineScope,
-                Dispatchers.IO
+                Dispatchers.IO,
+                false
             )
         )
     }
@@ -71,6 +73,16 @@ class MainViewModel @Inject constructor(
                 coroutineScope,
                 Dispatchers.IO,
                 entry
+            )
+        )
+    }
+
+    fun loadNewEntries() {
+        loadTopEntriesUseCase.execute(
+            LoadTopEntriesUseCaseParams.Get(
+                coroutineScope,
+                Dispatchers.IO,
+                true
             )
         )
     }

@@ -32,7 +32,7 @@ open class LoadTopEntriesUseCase @Inject constructor(
         parameters.coroutineScope.launch {
             withContext(parameters.dispatcher) {
 
-                val topEntries = entriesRepository.getTopEntries()
+                val topEntries = entriesRepository.getTopEntries(parameters.newEntries)
                 if (topEntries != null) {
                     result.postValue(LoadTopEntriesUseCaseResult.LoadTopEntriesSuccessful(topEntries))
                 } else {
@@ -50,7 +50,8 @@ sealed class LoadTopEntriesUseCaseParams {
 
     class Get(
         val coroutineScope: CoroutineScope,
-        val dispatcher: CoroutineDispatcher
+        val dispatcher: CoroutineDispatcher,
+        val newEntries: Boolean
     ) : LoadTopEntriesUseCaseParams()
 
 }

@@ -33,15 +33,6 @@ class MainActivity : DaggerAppCompatActivity(), FragmentInteractionListener {
 
         setContentView(R.layout.activity_main)
 
-        // send non-authenticated to login screen
-        /**
-        viewModel.riderAuthUseCaseResult.observe(this, Observer<RiderAuthUseCaseResult> { authResult ->
-        if (authResult is RiderAuthUseCaseResult.NotAuthenticated) {
-        findNavController(R.id.mainNavigationFragment).navigate(R.id.loginFragment)
-        }
-        })
-         **/
-
     }
 
     override fun onSupportNavigateUp() =

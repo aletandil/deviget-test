@@ -37,9 +37,9 @@ class EntryRepository @Inject constructor(
         return loadEntryByIDFromLocalDataSource(entryID)
     }
 
-    override suspend fun getTopEntries(): LiveData<List<Entry>>? {
+    override suspend fun getTopEntries(newEntries: Boolean): LiveData<List<Entry>>? {
 
-        loadTopEntriesFromRemoteDataSource()
+        loadTopEntriesFromRemoteDataSource(newEntries)
         return loadTopEntriesFromLocalDataSource()
     }
 
@@ -57,12 +57,12 @@ class EntryRepository @Inject constructor(
         return entriesDao.getEntryById(entryID)
     }
 
-    private suspend fun loadTopEntriesFromRemoteDataSource(): TopEntriesResponse? {
+    private suspend fun loadTopEntriesFromRemoteDataSource(newEntries: Boolean): TopEntriesResponse? {
 
         var topEntriesResponse: TopEntriesResponse? = null
 
         val apiFilters = HashMap<String, String>()
-        if (afterIndex != null) {
+        if (afterIndex != null && !newEntries) {
             apiFilters[AFTER_FILTER] = afterIndex!!
         }
 

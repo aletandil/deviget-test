@@ -68,12 +68,12 @@ object NetworkModule {
 
 
     /**
-     * @return RidersService
+     * @return EntriesService
      */
     @Provides
     @Reusable
     @JvmStatic
-    internal fun provideRiderService(apiClient: ApiClient): EntriesService {
+    internal fun provideEntryService(apiClient: ApiClient): EntriesService {
         return apiClient.createService(EntriesService::class.java)
     }
 }

@@ -16,6 +16,9 @@ import com.projecttesting.domain.LoadTopEntriesUseCaseResult
 import com.projecttesting.ui.base.BaseDaggerFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+
+
 
 
 /**
@@ -67,11 +70,16 @@ class MainFragment : BaseDaggerFragment() {
                     mainViewModel.loadMoreEntries()
                 }
             }
+
+            swipeRefreshEntries.setOnRefreshListener({
+                mainViewModel.loadNewEntries()
+            })
         }
 
         mainViewModel.topEntries.observe(this, Observer<LoadTopEntriesUseCaseResult> { topEntriesResult ->
             when (topEntriesResult) {
                 is LoadTopEntriesUseCaseResult.LoadTopEntriesSuccessful -> {
+                    swipeRefreshEntries.isRefreshing = false
                     //hide loading
                 }
                 is LoadTopEntriesUseCaseResult.LoadTopEntriesError -> showErrorLoadingTopEntries()

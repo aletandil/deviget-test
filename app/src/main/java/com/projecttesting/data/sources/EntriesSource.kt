@@ -6,7 +6,7 @@ import com.projecttesting.data.models.Entry
 
 interface EntriesSource {
 
-    suspend fun getTopEntries(): LiveData<List<Entry>>?
+    suspend fun getTopEntries(newEntries: Boolean): LiveData<List<Entry>>?
 
     suspend fun getEntryByID(entryID: String): Entry?
 

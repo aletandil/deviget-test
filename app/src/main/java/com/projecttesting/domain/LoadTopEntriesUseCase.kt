@@ -1,6 +1,7 @@
 package com.projecttesting.domain
 
-import com.projecttesting.data.models.TopEntriesResponse
+import androidx.lifecycle.LiveData
+import com.projecttesting.data.models.Entry
 import com.projecttesting.data.repositories.EntryRepository
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.CoroutineScope
@@ -57,6 +58,6 @@ sealed class LoadTopEntriesUseCaseParams {
 
 sealed class LoadTopEntriesUseCaseResult {
     class LoadTopEntriesLoading() : LoadTopEntriesUseCaseResult()
-    data class LoadTopEntriesSuccessful(val topEntriesResponse: TopEntriesResponse) : LoadTopEntriesUseCaseResult()
+    data class LoadTopEntriesSuccessful(val topEntriesResponse: LiveData<List<Entry>>?) : LoadTopEntriesUseCaseResult()
     class LoadTopEntriesError() : LoadTopEntriesUseCaseResult()
 }

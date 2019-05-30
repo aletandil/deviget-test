@@ -1,13 +1,16 @@
 package com.projecttesting.data.repositories
 
+import androidx.lifecycle.LiveData
 import com.projecttesting.data.daos.EntriesDao
 import com.projecttesting.data.models.Entry
 import com.projecttesting.data.models.TopEntriesResponse
 import com.projecttesting.data.services.EntriesService
+import com.projecttesting.data.services.EntriesService.Companion.AFTER_FILTER
 import com.projecttesting.data.sources.EntriesSource
 import com.projecttesting.network.NetworkHandler
 import com.projecttesting.network.RequestCallback
 import timber.log.Timber
+import java.util.*
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -27,20 +30,26 @@ class EntryRepository @Inject constructor(
     private val entriesDao: EntriesDao
 ) : EntriesSource {
 
+    private var afterIndex: String? = null
+
     override suspend fun getEntryByID(entryID: String): Entry? {
 
         return loadEntryByIDFromLocalDataSource(entryID)
     }
 
-    override suspend fun getTopEntries(): TopEntriesResponse? {
+    override suspend fun getTopEntries(): LiveData<List<Entry>>? {
 
-        return loadTopEntriesFromRemoteDataSource()
+        loadTopEntriesFromRemoteDataSource()
+        return loadTopEntriesFromLocalDataSource()
+    }
 
+    private fun loadTopEntriesFromLocalDataSource(): LiveData<List<Entry>> {
+        return entriesDao.getTopEntries()
     }
 
     override suspend fun updateEntry(entry: Entry) {
 
-        entriesDao.updateEntry(entry)
+        entriesDao.updateEntries(entry)
 
     }
 
@@ -50,9 +59,14 @@ class EntryRepository @Inject constructor(
 
     private suspend fun loadTopEntriesFromRemoteDataSource(): TopEntriesResponse? {
 
-        var rider: TopEntriesResponse? = null
+        var topEntriesResponse: TopEntriesResponse? = null
 
-        NetworkHandler.request(entriesService.getTopEntries(), object : RequestCallback<TopEntriesResponse> {
+        val apiFilters = HashMap<String, String>()
+        if (afterIndex != null) {
+            apiFilters[AFTER_FILTER] = afterIndex!!
+        }
+
+        NetworkHandler.request(entriesService.getTopEntries(apiFilters), object : RequestCallback<TopEntriesResponse> {
 
             override fun onError(message: String?) {
                 Timber.e(message)
@@ -60,9 +74,10 @@ class EntryRepository @Inject constructor(
 
             override fun onSuccess(data: TopEntriesResponse?) {
                 data?.let {
-                    rider = data
+                    topEntriesResponse = data
+                    afterIndex = data.data?.after
                     data.data?.children?.forEach({
-                        entriesDao.insertEntry(it.data!!)
+                        entriesDao.insertEntries(it.data!!)
                     })
                 }
             }
@@ -72,7 +87,11 @@ class EntryRepository @Inject constructor(
             }
         })
 
-        return rider
+        return topEntriesResponse
 
+    }
+
+    override fun getLocalTopEntries(): LiveData<List<Entry>> {
+        return entriesDao.getTopEntries()
     }
 }

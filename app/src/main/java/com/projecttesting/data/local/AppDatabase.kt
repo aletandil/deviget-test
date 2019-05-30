@@ -10,7 +10,7 @@ import com.projecttesting.data.models.Entry
 @Database(entities = [Entry::class], version = 1, exportSchema = false)
 abstract class AppDatabase : RoomDatabase() {
 
-    abstract fun ridersDao(): EntriesDao
+    abstract fun entriesDao(): EntriesDao
 
     companion object {
         private var INSTANCE: AppDatabase? = null
@@ -22,7 +22,7 @@ abstract class AppDatabase : RoomDatabase() {
                 if (INSTANCE == null) {
                     INSTANCE = Room.databaseBuilder(
                         context.applicationContext,
-                        AppDatabase::class.java, "ProjectTestingApp.db"
+                        AppDatabase::class.java, "ProjectTesting.db"
                     )
                         .build()
                 }

@@ -1,15 +1,16 @@
 package com.projecttesting.data.sources
 
+import androidx.lifecycle.LiveData
 import com.projecttesting.data.models.Entry
-import com.projecttesting.data.models.TopEntriesResponse
 
 
 interface EntriesSource {
 
-    suspend fun getTopEntries(): TopEntriesResponse?
+    suspend fun getTopEntries(): LiveData<List<Entry>>?
 
     suspend fun getEntryByID(entryID: String): Entry?
 
     suspend fun updateEntry(entry: Entry)
 
+    fun getLocalTopEntries(): LiveData<List<Entry>>?
 }

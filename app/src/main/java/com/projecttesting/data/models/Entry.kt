@@ -9,7 +9,7 @@ import com.squareup.moshi.JsonClass
 /**
  *  <a href="https://github.com/square/moshi#codegen">@JsonClass - Moshi’s Kotlin codegen support is an annotation processor</a>
  */
-@Entity(tableName = "Entry")
+@Entity(tableName = "Entries")
 @JsonClass(generateAdapter = true)
 data class Entry(
     @PrimaryKey @ColumnInfo(name = "id") @Json(name = "id") var id: String,
@@ -17,7 +17,8 @@ data class Entry(
     @ColumnInfo(name = "author") @Json(name = "author") var author: String?,
     @ColumnInfo(name = "thumbnail") @Json(name = "thumbnail") var thumbnail: String?,
     @ColumnInfo(name = "comments") @Json(name = "num_comments") var comments: Int?,
-    @ColumnInfo(name = "created") @Json(name = "created") var created: Long?,
-    @ColumnInfo(name = "readed") var readed: Boolean = false
+    @ColumnInfo(name = "created") @Json(name = "created_utc") var created: Long?,
+    @ColumnInfo(name = "readed") var readed: Boolean = false,
+    @ColumnInfo(name = "visible") var visible: Boolean = true
 
 )

@@ -10,12 +10,13 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.projecttesting.R
+import com.projecttesting.data.models.Entry
 import com.projecttesting.databinding.FragmentMainBinding
 import com.projecttesting.domain.LoadTopEntriesUseCaseResult
 import com.projecttesting.ui.base.BaseDaggerFragment
 import kotlinx.android.synthetic.main.fragment_main.*
 import javax.inject.Inject
+
 
 /**
  * Example Fragment
@@ -55,7 +56,7 @@ class MainFragment : BaseDaggerFragment() {
                     }
 
                     ActionType.DISMISS_ENTRY -> {
-
+                        mainViewModel.dismissEntry(entry)
                     }
                 }
 
@@ -71,13 +72,16 @@ class MainFragment : BaseDaggerFragment() {
         mainViewModel.topEntries.observe(this, Observer<LoadTopEntriesUseCaseResult> { topEntriesResult ->
             when (topEntriesResult) {
                 is LoadTopEntriesUseCaseResult.LoadTopEntriesSuccessful -> {
-                    val entries = topEntriesResult.topEntriesResponse.data?.children?.toList()
-                    (recycler_entries.adapter as? EntriesAdapter)?.updateEntries(entries)
-                    recycler_entries.layoutManager?.onRestoreInstanceState(mainViewModel.entriesScrollState)
+                    //hide loading
                 }
                 is LoadTopEntriesUseCaseResult.LoadTopEntriesError -> showErrorLoadingTopEntries()
             }
         })
+
+        mainViewModel.getLocalTopEntries().observe(this, Observer<List<Entry>> { entries ->
+            (recycler_entries.adapter as? EntriesAdapter)?.updateEntries(entries)
+            recycler_entries.layoutManager?.onRestoreInstanceState(mainViewModel.entriesScrollState)
+        });
 
         return binding.root
     }
@@ -88,7 +92,7 @@ class MainFragment : BaseDaggerFragment() {
     }
 
     private fun showErrorLoadingTopEntries() {
-        Toast.makeText(context, R.string.error_loading_top_entries, Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, com.projecttesting.R.string.error_loading_top_entries, Toast.LENGTH_SHORT).show()
     }
 
 }

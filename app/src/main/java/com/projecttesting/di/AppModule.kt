@@ -6,6 +6,7 @@ import com.projecttesting.App
 import com.projecttesting.data.local.AppDatabase
 import com.projecttesting.data.repositories.EntryRepository
 import com.projecttesting.data.services.EntriesService
+import com.projecttesting.domain.DismissEntryUseCase
 import com.projecttesting.domain.LoadTopEntriesUseCase
 import com.projecttesting.domain.MarkReadedEntryUseCase
 import dagger.Module
@@ -33,11 +34,11 @@ open class AppModule {
 
     @Singleton
     @Provides
-    open fun provideRidersRepository(
-        remoteRidersSource: EntriesService,
+    open fun provideEntryRepository(
+        remoteEntriesSource: EntriesService,
         appDatabase: AppDatabase
     ): EntryRepository =
-        EntryRepository(remoteRidersSource, appDatabase.ridersDao())
+        EntryRepository(remoteEntriesSource, appDatabase.entriesDao())
 
     @Singleton
     @Provides
@@ -45,13 +46,19 @@ open class AppModule {
 
     @Singleton
     @Provides
-    fun providesLoadRiderUseCase(
-        ridersRepository: EntryRepository
-    ): LoadTopEntriesUseCase = LoadTopEntriesUseCase(ridersRepository)
+    fun providesLoadTopEntriesUseCase(
+        entryRepository: EntryRepository
+    ): LoadTopEntriesUseCase = LoadTopEntriesUseCase(entryRepository)
 
     @Singleton
     @Provides
     fun providesMarkEntryReadedUseCase(
-        ridersRepository: EntryRepository
-    ): MarkReadedEntryUseCase = MarkReadedEntryUseCase(ridersRepository)
+        entryRepository: EntryRepository
+    ): MarkReadedEntryUseCase = MarkReadedEntryUseCase(entryRepository)
+
+    @Singleton
+    @Provides
+    fun providesDismissEntryReadedUseCase(
+        entryRepository: EntryRepository
+    ): DismissEntryUseCase = DismissEntryUseCase(entryRepository)
 }
